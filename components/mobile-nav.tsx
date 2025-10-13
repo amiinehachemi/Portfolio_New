@@ -9,30 +9,20 @@ import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
 import { useMetaColor } from "@/hooks/use-meta-color";
 import { Button } from "./ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { ModeSwitcher } from "./mode-switcher";
 import { siteConfig } from "@/config/site";
 import { Icons } from "./icons";
 
-export function MobileNav() {
+interface MobileNavProps {
+  toggleMusic: () => void;
+  playing: boolean;
+}
+
+export function MobileNav({ toggleMusic, playing }: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
   const { setMetaColor, metaColor } = useMetaColor();
-
-  // Music state
-  const [playing, setPlaying] = React.useState(false);
-  const audioRef = React.useRef<HTMLAudioElement>(null);
-
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (playing) audioRef.current.pause();
-    else audioRef.current.play();
-    setPlaying(!playing);
-  };
+  const router = useRouter();
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
@@ -57,11 +47,7 @@ export function MobileNav() {
             stroke="currentColor"
             className="!size-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 9h16.5m-16.5 6.75h16.5"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
           </svg>
           <span className="sr-only">Toggle Menu</span>
           <span className="flex items-center justify-between flex-1 h-8 px-2 text-sm font-normal border rounded-md shadow-none bg-muted/50 text-muted-foreground">
@@ -86,24 +72,16 @@ export function MobileNav() {
                   title={playing ? "Pause Music" : "Play Music"}
                 >
                   <FiMusic
-                    className={`w-6 h-6 ${
-                      playing ? "text-pink-500" : "text-foreground/60"
-                    }`}
+                    className={`w-6 h-6 ${playing ? "text-pink-500" : "text-foreground/60"}`}
                   />
-                  <audio ref={audioRef} src="/music/theme.mp3" loop preload="auto" />
                 </Button>
 
                 {/* Mode Switcher */}
                 <ModeSwitcher className="w-6 h-6" />
 
-                {/* GitHub Link */}
-                <Link
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Icons.gitHub className="w-6 h-6" />
-                  <span className="sr-only">GitHub</span>
+                {/* GitHub - smaller for mobile */}
+                <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
+                  <Icons.gitHub className="w-5 h-5" />
                 </Link>
               </div>
             </div>
@@ -113,11 +91,7 @@ export function MobileNav() {
               {docsConfig.mainNav?.map(
                 (item) =>
                   item.href && (
-                    <MobileLink
-                      key={item.href}
-                      href={item.href}
-                      onOpenChange={setOpen}
-                    >
+                    <MobileLink key={item.href} href={item.href} onOpenChange={setOpen}>
                       {item.title}
                     </MobileLink>
                   )
@@ -171,13 +145,7 @@ interface MobileLinkProps extends LinkProps {
   className?: string;
 }
 
-function MobileLink({
-  href,
-  onOpenChange,
-  className,
-  children,
-  ...props
-}: MobileLinkProps) {
+function MobileLink({ href, onOpenChange, className, children, ...props }: MobileLinkProps) {
   const router = useRouter();
   return (
     <Link
