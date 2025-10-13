@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
+import { FiMusic } from "react-icons/fi";
 
 import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,17 @@ import { Icons } from "./icons";
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
   const { setMetaColor, metaColor } = useMetaColor();
+
+  // Music state
+  const [playing, setPlaying] = React.useState(false);
+  const audioRef = React.useRef<HTMLAudioElement>(null);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (playing) audioRef.current.pause();
+    else audioRef.current.play();
+    setPlaying(!playing);
+  };
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
@@ -57,23 +69,46 @@ export function MobileNav() {
           </span>
         </Button>
       </DrawerTrigger>
+
       <DrawerTitle>
         <DrawerContent className="max-h-[80svh] p-0">
           <div className="p-6 overflow-auto">
+            {/* Header */}
             <div className="flex items-center justify-between gap-2 my-6">
               <h4 className="text-xl font-medium">Aditya Domle</h4>
               <div className="flex items-center justify-center gap-4">
-                <ModeSwitcher className="size-6" />
+                {/* Music Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-8 h-8 px-0 transition hover:scale-110"
+                  onClick={toggleMusic}
+                  title={playing ? "Pause Music" : "Play Music"}
+                >
+                  <FiMusic
+                    className={`w-6 h-6 ${
+                      playing ? "text-pink-500" : "text-foreground/60"
+                    }`}
+                  />
+                  <audio ref={audioRef} src="/music/theme.mp3" loop preload="auto" />
+                </Button>
+
+                {/* Mode Switcher */}
+                <ModeSwitcher className="w-6 h-6" />
+
+                {/* GitHub Link */}
                 <Link
                   href={siteConfig.links.github}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Icons.gitHub className="size-6" />
+                  <Icons.gitHub className="w-6 h-6" />
                   <span className="sr-only">GitHub</span>
                 </Link>
               </div>
             </div>
+
+            {/* Main Nav */}
             <div className="flex flex-col space-y-3">
               {docsConfig.mainNav?.map(
                 (item) =>
@@ -88,6 +123,8 @@ export function MobileNav() {
                   )
               )}
             </div>
+
+            {/* Sidebar Nav */}
             <div className="flex flex-col space-y-2">
               {docsConfig.sidebarNav.map((item, index) => (
                 <div key={index} className="flex flex-col gap-4 pt-6">
@@ -117,18 +154,7 @@ export function MobileNav() {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="items-center hidden gap-2 ml-auto md:flex-1 md:justify-end md:flex">
-                <Link
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Icons.gitHub className="w-4 h-4" />
-                  <span className="sr-only">GitHub</span>
-                </Link>
-              </div>
-            </div>
+
             <p className="text-xs text-center text-muted-foreground">
               — End of the menu —
             </p>
