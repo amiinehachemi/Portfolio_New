@@ -6,4 +6,4 @@ const viewSchema = new mongoose.Schema({
 
 const View = mongoose.models.View || mongoose.model("View", viewSchema);
 
-export default View;
+export default View; 
