@@ -22,7 +22,6 @@ interface MobileNavProps {
 export function MobileNav({ toggleMusic, playing }: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
   const { setMetaColor, metaColor } = useMetaColor();
-  const router = useRouter();
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
