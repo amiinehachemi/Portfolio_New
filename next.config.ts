@@ -6,7 +6,7 @@ const manifestHeaders = [
     value: "*",
   },
 ];
-
+ 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
