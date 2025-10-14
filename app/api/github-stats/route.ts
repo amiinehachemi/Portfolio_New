@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const username = siteConfig.links.githubUsername;
   const url = `https://api.github.com/users/${username}`;
-
+ 
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error("GitHub API request failed");
