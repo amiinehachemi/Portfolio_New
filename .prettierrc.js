@@ -11,3 +11,4 @@ module.exports = {
   bracketSameLine: false,
   proseWrap: 'preserve',
 };
+ 
