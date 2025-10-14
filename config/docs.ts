@@ -5,7 +5,7 @@ export const docsConfig = {
       href: '/',
     },
     //   {
-    //     title: "Blog",
+    //     title: "Blog", 
     //     href: "https://imaditya.vercel.app/about",
     //   },
   ],
