@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/site-header';
 import { SideNav } from '@/components/side-nav';
 import { SiteFooter } from '@/components/site-footer';
+import { Copilot } from '@/components/copilot';
 import { docsConfig } from '@/config/docs';
 
 import { setViewsServerAction } from './actions/getAndSetViewsServerAction';
@@ -128,6 +129,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </div>
               </div>
             </div>
+            <Copilot />
           </ThemeProvider>
           <Toaster richColors position="top-center" />
           <GoogleAnalytics

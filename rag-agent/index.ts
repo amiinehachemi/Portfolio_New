@@ -8,6 +8,7 @@ import { ChatOpenAI } from '@langchain/openai';
 import { createRetrievalTool } from './retrieval-tool';
 import { ragConfig } from './config';
 import type { RAGQueryResult, RAGAgentConfig } from './types';
+import { suggestPages } from '@/lib/page-suggestions';
 
 let agentInstance: Awaited<ReturnType<typeof createAgent>> | null = null;
 
@@ -38,14 +39,21 @@ export async function initializeRAGAgent(config?: RAGAgentConfig) {
   agentInstance = createAgent({
     model,
     tools: [retrievalTool],
-    systemPrompt: `You are a helpful assistant that answers questions based on information retrieved from a knowledge base. 
-    
-When answering questions:
-1. Use the search_knowledge_base tool to find relevant information
-2. Base your answers strictly on the retrieved information
-3. If the retrieved information doesn't contain the answer, say so clearly
-4. Cite sources when possible
-5. Be concise and accurate`,
+    systemPrompt: `You are an AI assistant for Amine Hachemi's portfolio website. You help visitors (CEOs, HR professionals, recruiters, and other users) learn about Amine's professional background, skills, experience, and projects.
+
+About Amine:
+- Tech Lead & Software Engineer at Intelswift
+- Specializes in AI integrations, backend systems, microservices, and multi-channel communication platforms
+- Experienced with RAG, AI agents, vector databases, and building scalable systems
+- Strong background in Node.js, TypeScript, React, Next.js, and cloud technologies
+
+Your role:
+1. Use the search_knowledge_base tool to find relevant information about Amine's portfolio
+2. Answer questions about his skills, experience, projects, education, and technical expertise
+3. Be professional, concise, and helpful - you're representing Amine to potential employers and collaborators
+4. If information isn't available in the knowledge base, politely say so and suggest they explore the portfolio pages
+5. Highlight relevant experience, technologies, and achievements when appropriate
+6. Maintain a friendly but professional tone suitable for business contexts`,
   });
 
   return agentInstance;
@@ -76,9 +84,18 @@ export async function queryRAGAgent(
       ? lastMessage.content 
       : JSON.stringify(lastMessage.content);
 
-    return {
+    // Suggest relevant pages based on the query
+    const suggestedPages = suggestPages(question);
+
+    const queryResult: RAGQueryResult = {
       answer,
     };
+
+    if (suggestedPages.length > 0) {
+      queryResult.suggestedPages = suggestedPages;
+    }
+
+    return queryResult;
   } catch (error) {
     console.error('RAG Agent query error:', error);
     throw new Error(
@@ -110,10 +127,11 @@ export async function* streamRAGAgent(
     );
 
     for await (const chunk of stream) {
-      if (chunk.content) {
-        const content = typeof chunk.content === 'string' 
-          ? chunk.content 
-          : JSON.stringify(chunk.content);
+      const chunkContent = (chunk as any).content;
+      if (chunkContent) {
+        const content = typeof chunkContent === 'string' 
+          ? chunkContent 
+          : JSON.stringify(chunkContent);
         yield content;
       }
     }

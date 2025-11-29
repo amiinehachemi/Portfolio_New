@@ -3,6 +3,17 @@
  * Set these environment variables in your .env file
  */
 
+// Load environment variables if running as a script (not in Next.js)
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
+  try {
+    const { config } = require('dotenv');
+    const { resolve } = require('path');
+    config({ path: resolve(process.cwd(), '.env.local') });
+  } catch (e) {
+    // dotenv not available or already loaded
+  }
+}
+
 export const ragConfig = {
   // Pinecone configuration
   pinecone: {
