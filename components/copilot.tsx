@@ -20,8 +20,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  suggestedPages?: PageSuggestion[];
-  isStreaming?: boolean;
+  suggestedPages?: PageSuggestion[] | undefined;
+  isStreaming?: boolean | undefined;
 }
 
 const suggestedQuestions = [

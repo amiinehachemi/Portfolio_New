@@ -48,3 +48,5 @@ pnpm-lock.yaml
 package-lock.json
 yarn.lock
 bun.lock
+# Local Netlify folder
+.netlify
