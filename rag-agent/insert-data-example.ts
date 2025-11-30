@@ -18,7 +18,7 @@ import { insertDataToPinecone, insertTextToPinecone } from './insert-data';
 /**
  * Example 1: Insert dummy data (default)
  */
-async function exampleInsertDummyData() {
+export async function exampleInsertDummyData() {
   console.log('Example 1: Inserting dummy data...\n');
   
   try {
@@ -32,7 +32,7 @@ async function exampleInsertDummyData() {
 /**
  * Example 2: Insert custom data
  */
-async function exampleInsertCustomData() {
+export async function exampleInsertCustomData() {
   console.log('Example 2: Inserting custom data...\n');
   
   const customData = [
